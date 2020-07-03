@@ -1,17 +1,17 @@
-package com.peas.model;
+package com.board.model;
 
 public class Tile {
 
 	private int x;
 	private int y;
-	private Peca peca;
+	private Piece piece;
 
 	public Tile() {
 	}
 
-	public Tile(int positionX, int positionY) {
-		this.x = positionX;
-		this.y = positionY;
+	public Tile(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public int getX() {
@@ -34,12 +34,12 @@ public class Tile {
 		return new Tile(getX(), getY());
 	}
 
-	public Peca getPeca() {
-		return peca;
+	public Piece getPiece() {
+		return piece;
 	}
 
-	public void setPeca(Peca peca) {
-		this.peca = peca;
+	public void setPiece(Piece piece) {
+		this.piece = piece;
 	}
 
 }

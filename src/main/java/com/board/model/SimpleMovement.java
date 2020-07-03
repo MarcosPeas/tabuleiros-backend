@@ -1,4 +1,4 @@
-package com.peas.model;
+package com.board.model;
 
 public class SimpleMovement {
 
