@@ -174,6 +174,7 @@ public class BoardServer implements Runnable {
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
 				log.info("Encerrando partida");
+				log.info(room.toString());
 				BroadcastOperations operations = server.getRoomOperations(room.getId());
 				if (operations != null) {
 					operations.sendEvent("updateRoom", room);

@@ -47,6 +47,12 @@ public class Manager {
 			joinRoom.setExceptionMessage("Sala nula");
 			return joinRoom;
 		}
+		if (!_room.getVersion().equals(room.getVersion())) {
+			System.out.println("Salas com versões diferentes");
+			joinRoom.setFail(true);
+			joinRoom.setExceptionMessage("Salas com versões diferentes");
+			return joinRoom;
+		}
 		if (_room.getPlayers().size() >= _room.getMaxPlayers()) {
 			System.out.println("Sala lotada");
 			joinRoom.setFail(true);
@@ -84,7 +90,9 @@ public class Manager {
 		Optional<Room> optional = rooms.values().stream().filter((r) -> {
 			boolean open = r.getPassword() == null || r.getPassword().isBlank();
 			boolean notFull = r.getPlayers().size() < r.getMaxPlayers();
-			return notFull && open && r.getName().equals(room.getName());
+			boolean version = r.getVersion().equals(room.getVersion());
+			boolean name = r.getName().equals(room.getName());
+			return notFull && open && name && version;
 		}).findFirst();
 
 		if (optional.isEmpty()) {
