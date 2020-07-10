@@ -1,4 +1,4 @@
-package com.board.teste;
+/*package com.board.teste;
 
 import java.util.Optional;
 
@@ -82,3 +82,4 @@ public class TesteLeaveRoom {
 		System.out.println(manager.getAllRooms().size());
 	}
 }
+*/

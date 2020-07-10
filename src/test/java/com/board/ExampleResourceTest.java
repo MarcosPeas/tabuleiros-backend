@@ -1,4 +1,4 @@
-package com.board;
+/*package com.board;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
@@ -18,4 +18,4 @@ public class ExampleResourceTest {
              .body(is("hello"));
     }
 
-}
+}*/

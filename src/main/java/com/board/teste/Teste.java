@@ -1,11 +1,8 @@
-package com.board.teste;
+/*package com.board.teste;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
-import com.board.manager.Manager;
 import com.board.model.Move;
 import com.board.model.Piece;
 import com.board.model.Player;
@@ -14,7 +11,6 @@ import com.board.model.Room;
 import com.board.model.Room.RoomStatus;
 import com.board.model.Tile;
 import com.board.model.Trail;
-import com.google.gson.Gson;
 
 public class Teste {
 	public static void main(String[] args) {
@@ -68,4 +64,4 @@ public class Teste {
 		System.out.println(gson.toJson(move));
 		System.out.println(gson.toJson(trail));
 	}
-}
+}*/

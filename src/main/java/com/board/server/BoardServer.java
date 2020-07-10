@@ -49,7 +49,7 @@ public class BoardServer implements Runnable {
 		Configuration config = new Configuration();
 		config.setPort(9092);
 		SocketIOServer server = new SocketIOServer(config);
-
+		
 		server.addConnectListener((client) -> {
 			try {
 				String secret = client.getHandshakeData().getHttpHeaders().get("secret");
@@ -79,9 +79,11 @@ public class BoardServer implements Runnable {
 				client.set(Constants.PRESENT_ROOM, _room.getId());
 				server.getRoomOperations(_room.getId()).sendEvent("updateRoom", _room);
 				if (_room.getStatus() == RoomStatus.IN_GAME) {
-					log.info(client.get(Constants.NICK) + " entrou na sala " + _room.getId());
+					log.info(client.get(Constants.NICK) + " entrou na sala " + _room.getId() + ". Versão: "
+							+ _room.getVersion());
 				} else {
-					log.info(client.get(Constants.NICK) + " criou a sala " + _room.getId());
+					log.info(client.get(Constants.NICK) + " criou a sala " + _room.getId() + ". Versão: "
+							+ _room.getVersion());
 				}
 			}
 		});

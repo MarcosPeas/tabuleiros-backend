@@ -1,4 +1,4 @@
-package com.board.teste;
+/*package com.board.teste;
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
@@ -46,4 +46,4 @@ public class TesteSockt4Net {
 			}
 		}).start();
 	}
-}
+}*/

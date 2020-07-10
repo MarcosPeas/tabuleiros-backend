@@ -1,4 +1,4 @@
-package com.board;
+/*package com.board;
 
 import io.quarkus.test.junit.NativeImageTest;
 
@@ -6,4 +6,4 @@ import io.quarkus.test.junit.NativeImageTest;
 public class NativeExampleResourceIT extends ExampleResourceTest {
 
     // Execute the same tests but in native mode.
-}
+}*/
