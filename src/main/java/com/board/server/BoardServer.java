@@ -15,6 +15,7 @@ import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.BroadcastOperations;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
+import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.DataListener;
 
@@ -49,8 +50,9 @@ public class BoardServer implements Runnable {
 		Configuration config = new Configuration();
 		config.setPort(9092);
 		SocketIOServer server = new SocketIOServer(config);
+		SocketIONamespace boardsNamespace = server.addNamespace("/boards");
 		
-		server.addConnectListener((client) -> {
+		boardsNamespace.addConnectListener((client) -> {
 			try {
 				String secret = client.getHandshakeData().getHttpHeaders().get("secret");
 				String nick = client.getHandshakeData().getHttpHeaders().get("nick");
@@ -69,7 +71,7 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("createOrJoinRoom", Room.class, new DataListener<Room>() {
+		boardsNamespace.addEventListener("createOrJoinRoom", Room.class, new DataListener<Room>() {
 
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
@@ -77,7 +79,7 @@ public class BoardServer implements Runnable {
 				Room _room = manager.createOrJoinRoom(room);
 				client.joinRoom(_room.getId());
 				client.set(Constants.PRESENT_ROOM, _room.getId());
-				server.getRoomOperations(_room.getId()).sendEvent("updateRoom", _room);
+				boardsNamespace.getRoomOperations(_room.getId()).sendEvent("updateRoom", _room);
 				if (_room.getStatus() == RoomStatus.IN_GAME) {
 					log.info(client.get(Constants.NICK) + " entrou na sala " + _room.getId() + ". Versão: "
 							+ _room.getVersion());
@@ -88,7 +90,7 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("createPrivateRoom", Room.class, new DataListener<Room>() {
+		boardsNamespace.addEventListener("createPrivateRoom", Room.class, new DataListener<Room>() {
 
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
@@ -104,7 +106,7 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("joinPrivateRoom", Room.class, new DataListener<Room>() {
+		boardsNamespace.addEventListener("joinPrivateRoom", Room.class, new DataListener<Room>() {
 
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
@@ -116,13 +118,13 @@ public class BoardServer implements Runnable {
 					Room _room = joinRoom.getRoom();
 					client.joinRoom(_room.getId());
 					client.set(Constants.PRESENT_ROOM, _room.getId());
-					server.getRoomOperations(_room.getId()).sendEvent("updateRoom", joinRoom);
+					boardsNamespace.getRoomOperations(_room.getId()).sendEvent("updateRoom", joinRoom);
 					log.info(client.get(Constants.NICK) + " entrou na sala privada " + _room.getId());
 				}
 			}
 		});
 
-		server.addEventListener("leaveRoom", Room.class, new DataListener<Room>() {
+		boardsNamespace.addEventListener("leaveRoom", Room.class, new DataListener<Room>() {
 
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
@@ -134,7 +136,7 @@ public class BoardServer implements Runnable {
 					client.sendEvent("leaveRoom");
 
 					client.leaveRoom(roomId);
-					BroadcastOperations roomOperations = server.getRoomOperations(roomId);
+					BroadcastOperations roomOperations = boardsNamespace.getRoomOperations(roomId);
 					if (roomOperations != null && op.isPresent()) {
 						roomOperations.sendEvent("updateRoom", op.get());
 					}
@@ -145,11 +147,11 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("movePiece", Move.class, new DataListener<Move>() {
+		boardsNamespace.addEventListener("movePiece", Move.class, new DataListener<Move>() {
 
 			@Override
 			public void onData(SocketIOClient client, Move move, AckRequest ackSender) throws Exception {
-				BroadcastOperations operations = server.getRoomOperations(move.getRoom().getId());
+				BroadcastOperations operations = boardsNamespace.getRoomOperations(move.getRoom().getId());
 				if (operations != null) {
 					operations.sendEvent("movePiece", move);
 					log.info(client.get(Constants.NICK) + " moveu a " + move.getTarget().getX() + "-"
@@ -158,11 +160,11 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("moveTrail", Trail.class, new DataListener<Trail>() {
+		boardsNamespace.addEventListener("moveTrail", Trail.class, new DataListener<Trail>() {
 
 			@Override
 			public void onData(SocketIOClient client, Trail trail, AckRequest ackSender) throws Exception {
-				BroadcastOperations operations = server.getRoomOperations(trail.getRoom().getId());
+				BroadcastOperations operations = boardsNamespace.getRoomOperations(trail.getRoom().getId());
 				if (operations != null) {
 					operations.sendEvent("moveTrail", trail);
 					log.info(client.get(Constants.NICK) + " moveu a " + trail.getPiece().getX() + "-"
@@ -171,13 +173,13 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("endGame", Room.class, new DataListener<Room>() {
+		boardsNamespace.addEventListener("endGame", Room.class, new DataListener<Room>() {
 
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
 				log.info("Encerrando partida");
 				log.info(room.toString());
-				BroadcastOperations operations = server.getRoomOperations(room.getId());
+				BroadcastOperations operations = boardsNamespace.getRoomOperations(room.getId());
 				if (operations != null) {
 					operations.sendEvent("updateRoom", room);
 					operations.getClients().forEach((e) -> {
@@ -188,13 +190,13 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addEventListener("giveUp", Room.class, new DataListener<Room>() {
+		boardsNamespace.addEventListener("giveUp", Room.class, new DataListener<Room>() {
 
 			@Override
 			public void onData(SocketIOClient client, Room room, AckRequest ackSender) throws Exception {
 				log.info(client.get(Constants.NICK) + " desistiu da partida");
 				Optional<Room> optional = manager.deleteRoom(client.getSessionId().toString(), room.getId());
-				BroadcastOperations operations = server.getRoomOperations(room.getId());
+				BroadcastOperations operations = boardsNamespace.getRoomOperations(room.getId());
 				client.del(Constants.PRESENT_ROOM);
 				if (operations != null) {
 					if (optional.isPresent()) {
@@ -204,7 +206,7 @@ public class BoardServer implements Runnable {
 			}
 		});
 
-		server.addDisconnectListener((client) -> {
+		boardsNamespace.addDisconnectListener((client) -> {
 			String roomId = client.get(Constants.PRESENT_ROOM);
 			String nick = client.get(Constants.NICK);
 			log.info(nick + " desconectou-se");
@@ -212,7 +214,7 @@ public class BoardServer implements Runnable {
 				String clientId = client.getSessionId().toString();
 				Optional<Room> op = manager.deleteRoom(clientId, roomId);
 				client.del(Constants.PRESENT_ROOM);
-				BroadcastOperations roomOperations = server.getRoomOperations(roomId);
+				BroadcastOperations roomOperations = boardsNamespace.getRoomOperations(roomId);
 				if (roomOperations != null && op.isPresent()) {
 					roomOperations.sendEvent("updateRoom", op.get());
 					System.out.println(nick + " deixou a sala: " + op.get().getId());
