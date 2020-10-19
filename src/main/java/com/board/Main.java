@@ -12,13 +12,13 @@ import javax.enterprise.event.Observes;
 @ApplicationScoped
 public class Main {
 
-	/*public static void main(String... args) {
+	public static void main(String... args) {
 		System.out.println("Meu main iniciado");
 		Quarkus.run(args);
 		BoardServer.getInstance().start();
-	}*/
+	}
 
-    void onStart(@Observes StartupEvent ev) {
+    /*void onStart(@Observes StartupEvent ev) {
         System.out.println("Iniciando Mesa Branca...");
         BoardServer boardServer = BoardServer.getInstance();
         boardServer.start();
@@ -26,5 +26,5 @@ public class Main {
 
     void onStop(@Observes ShutdownEvent ev) {
         System.out.println("Aplicativo encerrado");
-    }
+    }*/
 }
