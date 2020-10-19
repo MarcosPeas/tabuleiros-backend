@@ -239,4 +239,5 @@ public class Room {
 	public enum RoomStatus {
 		OPENING, CLOSED, FINISHED, CANCELED, IN_GAME, WAITING_FOR_PLAYERS
 	}
+	
 }
