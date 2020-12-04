@@ -2,11 +2,8 @@ package com.board;
 
 import com.board.server.BoardServer;
 import io.quarkus.runtime.Quarkus;
-import io.quarkus.runtime.ShutdownEvent;
-import io.quarkus.runtime.StartupEvent;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 
 //@QuarkusMain
 @ApplicationScoped

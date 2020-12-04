@@ -8,6 +8,7 @@ public class Player {
 	private String id;
 	private String socketId;
 	private String nick;
+	private String profileImage;
 
 	public String getId() {
 		return id;
@@ -48,14 +49,22 @@ public class Player {
 	public void setPlayerStatus(PlayerStatus playerStatus) {
 		this.playerStatus = playerStatus;
 	}
-	
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
 	@Override
 	public String toString() {
 		return nick + ", status: " + playerStatus;
 	}
 
 	public enum PlayerStatus {
-		WINNER, LOSER, DRAW, QUITTER, NULL
+		WINNER, LOSER, DRAW, QUITTER, NULL, PLAY_AGAIN
 	}
 
 }
